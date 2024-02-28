@@ -5,7 +5,7 @@ import urllib.parse
 
 log_option = {
     'format': '[%(asctime)s] [%(levelname)s] %(message)s',
-    'level': getattr(logging, 'INFO')
+    'level': logging.INFO
 }
 logging.basicConfig(**log_option)
 logging.getLogger("requests").setLevel(logging.WARNING)
