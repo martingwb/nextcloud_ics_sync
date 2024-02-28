@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import configparser, logging, requests, traceback
 from icalendar.cal import Calendar
-from requests.auth import HTTPBasicAuth
 import urllib.parse
 
 log_option = {
@@ -60,7 +59,7 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
                 r.raise_for_status()
 
     for euid in existing_uids:
-        if not euid in distant_uids:
+        if euid not in distant_uids:
             r = requests.delete('%s/%s.ics' % (base_url, euid), auth=(username, encoded_password))
         if r.status_code == 204:
             logging.info('Deleted %s' % euid)
