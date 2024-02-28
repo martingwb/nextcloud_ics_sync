@@ -14,7 +14,7 @@ CALDAVURL = '%sremote.php/dav/calendars/%s/%s'
 
 
 def do_import(username, password, calendar, server, ics_url, ics_username, ics_password):
-    logging.info('  Working with calendar %s...' % calendar)
+    logging.info('  Working with calendar %s...', calendar)
     base_url = CALDAVURL % (server, username, calendar)
 
     target_fetch_url = '%s?export' % base_url
@@ -24,7 +24,7 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
     try:
         target_cal = Calendar.from_ical(r.text)
     except ValueError as e:
-        logging.error('    Warning: Could not parse iCal (%s)' % target_fetch_url)
+        logging.error('    Warning: Could not parse iCal (%s)', target_fetch_url)
         logging.error(e)
         return
 
@@ -51,9 +51,9 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
                  headers={'content-type': 'text/calendar; charset=UTF-8'}
                  )
             if r.status_code == 500 and r'Sabre\VObject\Recur\NoInstancesException' in r.text:
-                logging.warning('   No valid instances: %s (%s)' % (uid, name))
+                logging.warning('   No valid instances: %s (%s)', uid, name)
             elif r.status_code in (201, 204):
-                logging.info('   Imported: %s (%s)' % (uid, name))
+                logging.info('   Imported: %s (%s)', uid, name)
                 imported_uids.append(uid)
             else:
                 r.raise_for_status()
@@ -62,7 +62,7 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
         if euid not in distant_uids:
             r = requests.delete('%s/%s.ics' % (base_url, euid), auth=(username, encoded_password))
         if r.status_code == 204:
-            logging.info('Deleted %s' % euid)
+            logging.info('Deleted %s', euid)
         elif r.status_code == 404:
             pass
         else:
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     logging.info('Done.')
     logging.info('Importing calendars...')
     for key in Config.sections():
-        logging.info(' Working on section %s' % key)
+        logging.info(' Working on section %s', key)
         try:
             do_import(
                 Config.get(key, 'username'), Config.get(key, 'password'), Config.get(key, 'calendar'), Config.get(key, 'server'),
