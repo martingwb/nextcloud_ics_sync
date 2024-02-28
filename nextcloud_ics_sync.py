@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import configparser, logging, requests, traceback
 from icalendar.cal import Calendar
+from requests.auth import HTTPBasicAuth
+import urllib.parse
 
 log_option = {
     'format': '[%(asctime)s] [%(levelname)s] %(message)s',
@@ -17,7 +19,8 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
     base_url = CALDAVURL % (server, username, calendar)
 
     target_fetch_url = '%s?export' % base_url
-    r = requests.get(target_fetch_url, auth=(username, password))
+    encoded_password = urllib.parse.quote(password, safe='')
+    r = requests.get(target_fetch_url, auth=(username, encoded_password))
     r.raise_for_status()
     try:
         target_cal = Calendar.from_ical(r.text)
@@ -28,7 +31,8 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
 
     existing_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '').replace('/', 'slash') for e in target_cal.walk('VEVENT')]
 
-    sourceRequest = requests.get(ics_url, auth=(ics_username, ics_password))
+    encoded_ics_password = urllib.parse.quote(ics_password, safe='')
+    sourceRequest = requests.get(ics_url, auth=(ics_username, encoded_ics_password))
     sourceRequest.encoding = 'utf-8'
     sourceContent = sourceRequest.text
     c = Calendar.from_ical(sourceContent)
@@ -43,10 +47,10 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
             cal = Calendar()
             cal.add_component(e)
             r = requests.put('%s/%s.ics' % (base_url, uid),
-                             data=cal.to_ical(),
-                             auth=(username, password),
-                             headers={'content-type': 'text/calendar; charset=UTF-8'}
-                             )
+                 data=cal.to_ical(),
+                 auth=(username, encoded_password),
+                 headers={'content-type': 'text/calendar; charset=UTF-8'}
+                 )
             if r.status_code == 500 and r'Sabre\VObject\Recur\NoInstancesException' in r.text:
                 logging.warning('   No valid instances: %s (%s)' % (uid, name))
             elif r.status_code == 201 or r.status_code == 204:
@@ -57,7 +61,7 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
 
     for euid in existing_uids:
         if not euid in distant_uids:
-            r = requests.delete('%s/%s.ics' % (base_url, euid), auth=(username, password))
+            r = requests.delete('%s/%s.ics' % (base_url, euid), auth=(username, encoded_password))
         if r.status_code == 204:
             logging.info('Deleted %s' % euid)
         elif r.status_code == 404:
