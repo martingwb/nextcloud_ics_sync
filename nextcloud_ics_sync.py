@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-import configparser, logging, requests, traceback
+import configparser
+import logging
+import requests
+import traceback
 from icalendar.cal import Calendar
 import urllib.parse
 
