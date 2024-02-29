@@ -16,7 +16,8 @@ logging.getLogger("requests").setLevel(logging.WARNING)
 CALDAVURL = '%sremote.php/dav/calendars/%s/%s'
 
 
-def do_import(username, password, calendar, server, ics_url, ics_username, ics_password):
+def do_import(username, password, calendar, server, ics_url, \
+        ics_username, ics_password):
     logging.info('  Working with calendar %s...', calendar)
     base_url = CALDAVURL % (server, username, calendar)
 
@@ -31,7 +32,8 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
         logging.error(e)
         return
 
-    existing_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '').replace('/', 'slash') for e in target_cal.walk('VEVENT')]
+    existing_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '')\
+            .replace('/', 'slash') for e in target_cal.walk('VEVENT')]
 
     encoded_ics_password = urllib.parse.quote(ics_password, safe='')
     sourceRequest = requests.get(ics_url, auth=(ics_username, encoded_ics_password))
@@ -39,7 +41,8 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
     sourceContent = sourceRequest.text
     c = Calendar.from_ical(sourceContent)
 
-    distant_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '').replace('/', 'slash') for e in c.walk('VEVENT')]
+    distant_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '')\
+            .replace('/', 'slash') for e in c.walk('VEVENT')]
 
     imported_uids = []
     for e in c.walk('VEVENT'):
@@ -54,7 +57,8 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
                 auth=(username, encoded_password),
                 headers={'content-type': 'text/calendar; charset=UTF-8'}
             )
-            if r.status_code == 500 and r'Sabre\VObject\Recur\NoInstancesException' in r.text:
+            if r.status_code == 500 and \
+            r'Sabre\VObject\Recur\NoInstancesException' in r.text:
                 logging.warning('   No valid instances: %s (%s)', uid, name)
             elif r.status_code in (201, 204):
                 logging.info('   Imported: %s (%s)', uid, name)
