@@ -32,7 +32,7 @@ def do_import(username, password, calendar, server, ics_url, \
         logging.error(e)
         return
 
-    existing_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '')\
+    existing_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '')
                      .replace('/', 'slash') for e in target_cal.walk('VEVENT')]
 
     encoded_ics_password = urllib.parse.quote(ics_password, safe='')
@@ -41,7 +41,7 @@ def do_import(username, password, calendar, server, ics_url, \
     sourceContent = sourceRequest.text
     c = Calendar.from_ical(sourceContent)
 
-    distant_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '')\
+    distant_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '')
                     .replace('/', 'slash') for e in c.walk('VEVENT')]
 
     imported_uids = []
