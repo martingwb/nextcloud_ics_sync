@@ -20,7 +20,7 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
     logging.info('  Working with calendar %s...', calendar)
     base_url = CALDAVURL % (server, username, calendar)
 
-    target_fetch_url = '%s?export' % base_url
+    target_fetch_url = f'{base_url}?export'
     encoded_password = urllib.parse.quote(password, safe='')
     r = requests.get(target_fetch_url, auth=(username, encoded_password))
     r.raise_for_status()
@@ -49,7 +49,7 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
             cal = Calendar()
             cal.add_component(e)
             r = requests.put(
-                '%s/%s.ics' % (base_url, uid),
+                f'{base_url}/{uid}.ics',
                 data=cal.to_ical(),
                 auth=(username, encoded_password),
                 headers={'content-type': 'text/calendar; charset=UTF-8'}
@@ -64,7 +64,7 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
 
     for euid in existing_uids:
         if euid not in distant_uids:
-            r = requests.delete('%s/%s.ics' % (base_url, euid), auth=(username, encoded_password))
+            r = requests.delete(f'{base_url}/{uid}.ics', auth=(username, encoded_password))
         if r.status_code == 204:
             logging.info('Deleted %s', euid)
         elif r.status_code == 404:
