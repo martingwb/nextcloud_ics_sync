@@ -84,8 +84,13 @@ if __name__ == '__main__':
         logging.info(' Working on section %s', key)
         try:
             do_import(
-                Config.get(key, 'username'), Config.get(key, 'password'), Config.get(key, 'calendar'), Config.get(key, 'server'),
-                Config.get(key, 'ics_url'), Config.get(key, 'ics_username'), Config.get(key, 'ics_password')
+                Config.get(key, 'username'),
+                    Config.get(key, 'password'),
+                    Config.get(key, 'calendar'),
+                    Config.get(key, 'server'),
+                Config.get(key, 'ics_url'),
+                    Config.get(key, 'ics_username'),
+                    Config.get(key, 'ics_password')
             )
         except Exception as e:
             logging.error(traceback.print_exc())
