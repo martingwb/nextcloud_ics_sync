@@ -58,7 +58,7 @@ def do_import(username, password, calendar, server, ics_url, \
                 headers={'content-type': 'text/calendar; charset=UTF-8'}
             )
             if r.status_code == 500 and \
-                r'Sabre\VObject\Recur\NoInstancesException' in r.text:
+                    r'Sabre\VObject\Recur\NoInstancesException' in r.text:
                 logging.warning('   No valid instances: %s (%s)', uid, name)
             elif r.status_code in (201, 204):
                 logging.info('   Imported: %s (%s)', uid, name)
