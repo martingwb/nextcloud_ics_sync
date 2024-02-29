@@ -48,11 +48,12 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
         if uid not in existing_uids:
             cal = Calendar()
             cal.add_component(e)
-            r = requests.put('%s/%s.ics' % (base_url, uid),
-                 data=cal.to_ical(),
-                 auth=(username, encoded_password),
-                 headers={'content-type': 'text/calendar; charset=UTF-8'}
-                 )
+            r = requests.put(
+                '%s/%s.ics' % (base_url, uid),
+                data=cal.to_ical(),
+                auth=(username, encoded_password),
+                headers={'content-type': 'text/calendar; charset=UTF-8'}
+            )
             if r.status_code == 500 and r'Sabre\VObject\Recur\NoInstancesException' in r.text:
                 logging.warning('   No valid instances: %s (%s)', uid, name)
             elif r.status_code in (201, 204):
