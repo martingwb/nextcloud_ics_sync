@@ -17,7 +17,7 @@ CALDAVURL = '%sremote.php/dav/calendars/%s/%s'
 
 
 def do_import(username, password, calendar, server, ics_url, \
-        ics_username, ics_password):
+             ics_username, ics_password):
     logging.info('  Working with calendar %s...', calendar)
     base_url = CALDAVURL % (server, username, calendar)
 
@@ -33,7 +33,7 @@ def do_import(username, password, calendar, server, ics_url, \
         return
 
     existing_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '')\
-            .replace('/', 'slash') for e in target_cal.walk('VEVENT')]
+                    .replace('/', 'slash') for e in target_cal.walk('VEVENT')]
 
     encoded_ics_password = urllib.parse.quote(ics_password, safe='')
     sourceRequest = requests.get(ics_url, auth=(ics_username, encoded_ics_password))
@@ -42,7 +42,7 @@ def do_import(username, password, calendar, server, ics_url, \
     c = Calendar.from_ical(sourceContent)
 
     distant_uids = [bytes.decode(e['UID'].to_ical()).replace('\'', '')\
-            .replace('/', 'slash') for e in c.walk('VEVENT')]
+                    .replace('/', 'slash') for e in c.walk('VEVENT')]
 
     imported_uids = []
     for e in c.walk('VEVENT'):
