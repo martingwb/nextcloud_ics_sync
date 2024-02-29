@@ -64,7 +64,8 @@ def do_import(username, password, calendar, server, ics_url, ics_username, ics_p
 
     for euid in existing_uids:
         if euid not in distant_uids:
-            r = requests.delete(f'{base_url}/{uid}.ics', auth=(username, encoded_password))
+            r = requests.delete(
+                f'{base_url}/{uid}.ics', auth=(username, encoded_password))
         if r.status_code == 204:
             logging.info('Deleted %s', euid)
         elif r.status_code == 404:
@@ -85,12 +86,12 @@ if __name__ == '__main__':
         try:
             do_import(
                 Config.get(key, 'username'),
-                    Config.get(key, 'password'),
-                    Config.get(key, 'calendar'),
-                    Config.get(key, 'server'),
+                Config.get(key, 'password'),
+                Config.get(key, 'calendar'),
+                Config.get(key, 'server'),
                 Config.get(key, 'ics_url'),
-                    Config.get(key, 'ics_username'),
-                    Config.get(key, 'ics_password')
+                Config.get(key, 'ics_username'),
+                Config.get(key, 'ics_password')
             )
         except Exception as e:
             logging.error(traceback.print_exc())
