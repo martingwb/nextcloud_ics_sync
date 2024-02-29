@@ -18,6 +18,9 @@ CALDAVURL = '%sremote.php/dav/calendars/%s/%s'
 
 def do_import(username, password, calendar, server, ics_url,
               ics_username, ics_password):
+    """
+    This provides strings for logging
+    """
     logging.info('  Working with calendar %s...', calendar)
     base_url = CALDAVURL % (server, username, calendar)
 
