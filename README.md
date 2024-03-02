@@ -1,9 +1,10 @@
 # nextcloud_ics_sync
 
-Python project to sync ics calendars into nextcloud.
+Python project to sync ics calendars into nextcloud. Forked from https://github.com/MrBE4R/nextcloud_ics_sync, which has been dapted from https://github.com/buzz/ics2owncloud.py .
 
-Adapted from https://github.com/buzz/ics2owncloud.py .
- 
+# Changes:
+- allowing passwords with special characters
+- some formatting, corrections and enhancements according to deepsource
 
 ## Getting Started
 
@@ -12,11 +13,12 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 This project has been tested on CentOS 7.6 with nextcloud 14.x, google calendar and zimbra calendar.
+This fork has been tested on Debian 12 with nextcloud 27.
 
 ```
-Python        : 3.4.9
-pip3          : 8.1.2
-requests      : 2.20.0
+Python        : 3.4.9 / fork with 3.11.2
+pip3          : 8.1.2 / fork with 23.0.1
+requests      : 2.20.0 / 
 icalendar     : 3.9.2
 ```
 
